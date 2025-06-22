@@ -1,0 +1,3 @@
+For Ui - Tailwind CSS, shadcn
+For databse - neonDB x drizzle ORM
+For Authentication - clerk
