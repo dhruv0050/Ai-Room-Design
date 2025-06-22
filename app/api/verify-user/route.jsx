@@ -8,8 +8,7 @@ export async function POST(req){
     try {
         //If user exists?
         const userInfo = await db.select().from(Users)
-        .where(eq(Users.email,user?.primaryEmailAddress.emailAddress));
-        console.log("User: ",userInfo)
+        .where(eq(Users.email,user?.primaryEmailAddress.emailAddress))
 
         //If not exists
         if(userInfo?.length == 0){
