@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../../components/ui/select"
-function RoomType(selectedRoomType) {
+function RoomType({selectedRoomType}) {
   return (
     <div>
     <label className='text-slate-400'>Select Room Type * </label>
