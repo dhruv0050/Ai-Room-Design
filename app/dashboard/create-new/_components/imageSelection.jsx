@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 
-function ImageSelection() {
+function ImageSelection({selectedImage}) {
 
     const [file, setFile] = useState(null);
 
