@@ -1,4 +1,4 @@
 For Ui - Tailwind CSS, shadcn
 For databse - neonDB x drizzle ORM
 For Authentication - clerk
-For designed images - Firebase Storage
+For designed images uploads - Supabase Storage

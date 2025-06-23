@@ -20,7 +20,13 @@ function CreateNew() {
 
   const GenerateAIImage = async ()=>{
     const rawImageUrl = await SaveRawImageToSupabase()
-    const result = await axios.post('/api/design-room',formData);
+    const result = await axios.post('/api/design-room',
+      {
+        imageUrl: rawImageUrl,
+        roomType: formData?.roomType,
+        designType: formData?.designType,
+        additionalReq: formData?.additionalReq
+      });
     console.log(result)
   }
 const SaveRawImageToSupabase = async () => {
