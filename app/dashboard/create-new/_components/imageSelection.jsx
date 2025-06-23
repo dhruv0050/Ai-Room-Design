@@ -28,7 +28,7 @@ function ImageSelection() {
             cursor-pointer hover:shadow-lg 
             transition-all duration-300
             min-h-[200px] sm:min-h-[250px] md:min-h-[300px]
-            ${file && 'p-2 sm:p-4 bg-white'}
+            ${file && 'p-0 bg-white'}
           `}>
             {!file ? (
               <div className="flex flex-col items-center space-y-2">
@@ -49,13 +49,7 @@ function ImageSelection() {
                 width={300} 
                 height={300}
                 alt="Selected room image"
-                className='
-                  w-full h-auto
-                  max-w-[200px] max-h-[200px]
-                  sm:max-w-[250px] sm:max-h-[250px]
-                  md:max-w-[300px] md:max-h-[300px]
-                  object-cover rounded-lg
-                '
+                className='w-full h-full object-cover rounded-xl'
               />
             )}
           </div>
