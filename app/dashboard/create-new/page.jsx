@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ImageSelection from './_components/imageSelection'
 import RoomType from './_components/RoomType'
 import DesignType from './_components/DesignType'
@@ -10,23 +10,40 @@ import supabase from '../../../config/supabase'
 import { useUser } from '@clerk/nextjs'
 import CustomLoading from './_components/CustomLoading'
 import AiOutputDialog from '../_components/AiOutputDialog'
+import { UserDetailContext } from '../../../app/_context/UserDetailContext'
+import { Users } from '../../../config/schema'
+import { db } from '../../../config/db'
 
 function CreateNew() {
 
-  const [formData,setFormData] = useState([])
-  const onHandleInputChange = (value,fieldName)=>{
-    setFormData(prev=>({
+  const [formData, setFormData] = useState([])
+  const onHandleInputChange = (value, fieldName) => {
+    setFormData(prev => ({
       ...prev,
       [fieldName]: value
     }))
   }
-  const {user} = useUser();
-  const [loading,setLoading] = useState(false)
-  const [openOutputDialog,setOpenOutputDialog] = useState(false)
-  const [aiOutputImage,setAiOutputImage] = useState()
-  const [orgImage,setOrgImage] = useState()
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false)
+  const [openOutputDialog, setOpenOutputDialog] = useState(false)
+  const [aiOutputImage, setAiOutputImage] = useState()
+  const [orgImage, setOrgImage] = useState()
+  const { userDetail, setUserDetail } = useContext(UserDetailContext)
 
-  const GenerateAIImage = async ()=>{
+
+  const updateUserCredits = async () => {
+    const result = await db.update(Users).set({
+      credits: userDetail.credits - 1
+    }).returning({ id: Users.id })
+
+    if (result) {
+      setUserDetail(prev => ({
+        ...prev,
+        credits: userDetail?.credits + selectedOption?.credit - 1
+      }))
+    }
+  }
+  const GenerateAIImage = async () => {
     setLoading(true)
     const rawImageUrl = await SaveRawImageToSupabase()
     const result = await axios.post('/api/design-room',
@@ -35,35 +52,37 @@ function CreateNew() {
         roomType: formData?.roomType,
         designType: formData?.designType,
         additionalReq: formData?.additionalReq,
-        userEmail:user?.primaryEmailAddress?.emailAddress
+        userEmail: user?.primaryEmailAddress?.emailAddress
       });
-      console.log(result)
-      setAiOutputImage(result.data.result) //Output image's url
-      setOpenOutputDialog(true)
-      setLoading(false)
+    console.log(result)
+    await updateUserCredits()
+    setAiOutputImage(result.data.result) //Output image's url
+    setOpenOutputDialog(true)
+    setLoading(false)
+
   }
-const SaveRawImageToSupabase = async () => {
-  const fileName = `${Date.now()}_raw.png`;
+  const SaveRawImageToSupabase = async () => {
+    const fileName = `${Date.now()}_raw.png`;
 
-  // Upload the file
-  const { data, error } = await supabase.storage
-    .from('room-design')
-    .upload(`designs/${fileName}`, formData.image);
+    // Upload the file
+    const { data, error } = await supabase.storage
+      .from('room-design')
+      .upload(`designs/${fileName}`, formData.image);
 
-  if (error) {
-    console.error('Upload error:', error.message);
-    return null;
-  }
+    if (error) {
+      console.error('Upload error:', error.message);
+      return null;
+    }
 
-  // Get public URL
-  const { data: publicData } = supabase.storage
-    .from('room-design')
-    .getPublicUrl(`designs/${fileName}`);
+    // Get public URL
+    const { data: publicData } = supabase.storage
+      .from('room-design')
+      .getPublicUrl(`designs/${fileName}`);
 
-  setOrgImage(publicData.publicUrl);
+    setOrgImage(publicData.publicUrl);
 
-  return publicData.publicUrl;
-};
+    return publicData.publicUrl;
+  };
 
   return (
     <div>
@@ -72,21 +91,21 @@ const SaveRawImageToSupabase = async () => {
 
       <div className='grid grid-cols-1 md:grid-cols-2 mt-10 gap-10'>
         {/* Image upload */}
-        <ImageSelection selectedImage = {(value)=> onHandleInputChange(value,'image')}/>
+        <ImageSelection selectedImage={(value) => onHandleInputChange(value, 'image')} />
         {/* Form input */}
         <div>
-            <RoomType selectedRoomType={(value)=>onHandleInputChange(value,'roomType')}/>
+          <RoomType selectedRoomType={(value) => onHandleInputChange(value, 'roomType')} />
 
-            <DesignType selectedDesignType={(value)=>onHandleInputChange(value,'designType')}/>
+          <DesignType selectedDesignType={(value) => onHandleInputChange(value, 'designType')} />
 
           {/* Additional requirement */}
-          <AdditionalReq additionalRequirementInput={(value)=> onHandleInputChange(value,'additionalReq')}/>
+          <AdditionalReq additionalRequirementInput={(value) => onHandleInputChange(value, 'additionalReq')} />
           {/* Generate Button */}
-          <Button className='w-full mt-5 bg-violet-500 mb-30 hover:bg-violet-400' onClick = {GenerateAIImage}>Generate Image<span className='text-sm text-gray-300'>(1 credit)</span></Button>
+          <Button className='w-full mt-5 bg-violet-500 mb-30 hover:bg-violet-400' onClick={GenerateAIImage}>Generate Image<span className='text-sm text-gray-300'>(1 credit)</span></Button>
         </div>
       </div>
-    <CustomLoading loading={loading}/>
-    <AiOutputDialog openDialog={openOutputDialog} closeDialog={()=>setOpenOutputDialog(false)} orgImage={orgImage} aiImage={aiOutputImage} />
+      <CustomLoading loading={loading} />
+      <AiOutputDialog openDialog={openOutputDialog} closeDialog={() => setOpenOutputDialog(false)} orgImage={orgImage} aiImage={aiOutputImage} />
     </div>
   )
 }

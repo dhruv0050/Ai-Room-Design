@@ -3,6 +3,7 @@ import { Button } from '../../../components/ui/button'
 import { UserDetailContext } from '../../_context/UserDetailContext'
 import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useContext } from 'react'
 
 function Header() {
@@ -13,7 +14,10 @@ function Header() {
                 <Image src={'/logo.svg'} width={40} height={40} alt='icon' />
                 <h2 className='font-bold text-sm sm:text-lg'>AI Room Design</h2>
             </div>
+            <Link href={'/dashboard/buy-credits'}>
+
             <Button variant="ghost" className="rounded-full text-violet-500 hidden sm:block">Buy More Credits</Button>
+            </Link>
             <div className='flex gap-2 sm:gap-7 items-center'>
                 <div className='flex gap-2 p-1 items-center bg-slate-200 px-2 sm:px-3 rounded-full'>
                     <Image src ={'/star.png'} width={20} height={20}/>
