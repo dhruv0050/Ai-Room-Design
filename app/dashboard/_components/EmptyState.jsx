@@ -16,7 +16,7 @@ function EmptyState() {
         />
       </div>
       <h2 className='font-medium text-base sm:text-lg md:text-xl text-gray-500 text-center mt-4 sm:mt-6 max-w-xs sm:max-w-md'>
-        Create New AI Design for Your Room
+        Create Your First AI Design for Your Room
       </h2>
       <Link href="/dashboard/create-new">
         <Button className='mt-4 sm:mt-5 bg-violet-500 hover:bg-violet-400 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto max-w-xs'>
