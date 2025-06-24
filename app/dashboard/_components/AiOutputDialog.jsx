@@ -23,7 +23,7 @@ function AiOutputDialog({ openDialog,closeDialog,orgImage,aiImage }) {
                             imageUrl:aiImage
                         }}
                     />
-                    <Button className='bg-violet-500' onClick = {()=>closeDialog(false)}>Close</Button>
+                    <Button className='bg-violet-500 hover:bg-violet-400' onClick = {()=>closeDialog(false)}>Close</Button>
                 </AlertDialogHeader>
             </AlertDialogContent>
         </AlertDialog>
