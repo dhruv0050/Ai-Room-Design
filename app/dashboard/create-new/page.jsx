@@ -8,6 +8,7 @@ import { Button } from '../../../components/ui/button'
 import axios from 'axios'
 import supabase from '../../../config/supabase'
 import { useUser } from '@clerk/nextjs'
+import CustomLoading from './_components/CustomLoading'
 
 function CreateNew() {
 
@@ -18,9 +19,12 @@ function CreateNew() {
       [fieldName]: value
     }))
   }
-  const {user} = useUser()
+  const {user} = useUser();
+  const [loading,setLoading] = useState(false)
+  const [outputResult,setOutputResult] = useState()
 
   const GenerateAIImage = async ()=>{
+    setLoading(true)
     const rawImageUrl = await SaveRawImageToSupabase()
     const result = await axios.post('/api/design-room',
       {
@@ -30,7 +34,9 @@ function CreateNew() {
         additionalReq: formData?.additionalReq,
         userEmail:user?.primaryEmailAddress?.emailAddress
       });
-    console.log(result)
+      console.log(result)
+      setOutputResult(result.data.result)
+      setLoading(false)
   }
 const SaveRawImageToSupabase = async () => {
   const fileName = `${Date.now()}_raw.png`;
@@ -76,6 +82,7 @@ const SaveRawImageToSupabase = async () => {
           <Button className='w-full mt-5 bg-violet-500 mb-30 hover:bg-violet-400' onClick = {GenerateAIImage}>Generate Image<span className='text-sm text-gray-300'>(1 credit)</span></Button>
         </div>
       </div>
+    <CustomLoading loading={loading}/>
     </div>
   )
 }
