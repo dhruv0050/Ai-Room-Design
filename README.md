@@ -325,16 +325,6 @@ POST /api/purchase-credits
 
 ---
 
-## 🤝 **Contributing**
-
-<div align="center">
-
-We welcome contributions from the community! 🎉
-
-[![Contributors](https://contrib.rocks/image?repo=yourusername/ai-room-design)](https://github.com/yourusername/ai-room-design/graphs/contributors)
-
-</div>
-
 ### **🔧 Development Workflow**
 
 1. **Fork** the repository
