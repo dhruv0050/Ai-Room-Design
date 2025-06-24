@@ -39,7 +39,7 @@ function CreateNew() {
     if (result) {
       setUserDetail(prev => ({
         ...prev,
-        credits: userDetail?.credits + selectedOption?.credit - 1
+        credits: userDetail?.credits - 1
       }))
     }
   }

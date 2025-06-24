@@ -2,13 +2,24 @@ import { NextResponse } from "next/server";
 import supabase from "../../../config/supabase";
 import { db } from "../../../config/db";
 import { AiGeneratedImage } from "../../../config/schema";
+import Replicate from "replicate";
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
 export async function POST(req) {
   const { imageUrl, roomType, designType, additionalReq, userEmail } = await req.json();
 
   try {
-    // Step 1: Fetch AI-generated image from Replicate (static for now)
-    const output = "https://replicate.delivery/xezq/hd0RWJLosOo3GBAlYRZfQ5ywD9XoS5uqXWxOLvG9O8GjM5cKA/out.png";
+    // Step 1: Fetching AI-generated image from Replicate
+
+    const input = {
+      image: imageUrl,
+      prompt: 'A '+roomType+' with a'+designType+' style interior '+additionalReq
+  };
+
+    const output = await replicate.run("adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38", { input });
     const response = await fetch(output);
     if (!response.ok) throw new Error("Failed to fetch image from Replicate");
 
