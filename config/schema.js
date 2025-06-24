@@ -9,3 +9,11 @@ export const Users = pgTable('users', {
 });
 
 
+export const AiGeneratedImage = pgTable('aiGeneratedImage',{
+    id:serial('id').primaryKey(),
+    roomType:varchar('roomType').notNull(),
+    designType:varchar('designType').notNull(),
+    orgImage:varchar('orgImage').notNull(),
+    aiImage:varchar('aiImage').notNull(),
+    userEmail:varchar('userEmail')
+});

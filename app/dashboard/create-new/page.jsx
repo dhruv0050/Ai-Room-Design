@@ -7,6 +7,7 @@ import AdditionalReq from './_components/AdditionalReq'
 import { Button } from '../../../components/ui/button'
 import axios from 'axios'
 import supabase from '../../../config/supabase'
+import { useUser } from '@clerk/nextjs'
 
 function CreateNew() {
 
@@ -17,6 +18,7 @@ function CreateNew() {
       [fieldName]: value
     }))
   }
+  const {user} = useUser()
 
   const GenerateAIImage = async ()=>{
     const rawImageUrl = await SaveRawImageToSupabase()
@@ -25,7 +27,8 @@ function CreateNew() {
         imageUrl: rawImageUrl,
         roomType: formData?.roomType,
         designType: formData?.designType,
-        additionalReq: formData?.additionalReq
+        additionalReq: formData?.additionalReq,
+        userEmail:user?.primaryEmailAddress?.emailAddress
       });
     console.log(result)
   }
