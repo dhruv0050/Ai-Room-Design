@@ -3,3 +3,4 @@ For databse - neonDB x drizzle ORM
 For Authentication - clerk
 For designed images uploads - Supabase Storage
 For AI generated images - used replicate's adirik/interior-design model 0.33.0
+For slider of before-after image - used ReactBeforeSliderComponent

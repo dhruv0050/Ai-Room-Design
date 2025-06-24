@@ -40,7 +40,7 @@ export async function POST(req) {
       userEmail: userEmail
     }).returning({ id: AiGeneratedImage.id });
 
-    return NextResponse.json({ result: dbResult[0] });
+    return NextResponse.json({ result: aiImageUrl});
 
   } catch (err) {
     console.error("Image upload error:", err);

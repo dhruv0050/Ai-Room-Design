@@ -9,6 +9,7 @@ import axios from 'axios'
 import supabase from '../../../config/supabase'
 import { useUser } from '@clerk/nextjs'
 import CustomLoading from './_components/CustomLoading'
+import AiOutputDialog from '../_components/AiOutputDialog'
 
 function CreateNew() {
 
@@ -21,7 +22,9 @@ function CreateNew() {
   }
   const {user} = useUser();
   const [loading,setLoading] = useState(false)
-  const [outputResult,setOutputResult] = useState()
+  const [openOutputDialog,setOpenOutputDialog] = useState(false)
+  const [aiOutputImage,setAiOutputImage] = useState()
+  const [orgImage,setOrgImage] = useState()
 
   const GenerateAIImage = async ()=>{
     setLoading(true)
@@ -35,7 +38,8 @@ function CreateNew() {
         userEmail:user?.primaryEmailAddress?.emailAddress
       });
       console.log(result)
-      setOutputResult(result.data.result)
+      setAiOutputImage(result.data.result) //Output image's url
+      setOpenOutputDialog(true)
       setLoading(false)
   }
 const SaveRawImageToSupabase = async () => {
@@ -51,14 +55,13 @@ const SaveRawImageToSupabase = async () => {
     return null;
   }
 
-  console.log('File uploaded:', data);
-
   // Get public URL
   const { data: publicData } = supabase.storage
     .from('room-design')
     .getPublicUrl(`designs/${fileName}`);
 
-  console.log('Public URL:', publicData.publicUrl);
+  setOrgImage(publicData.publicUrl);
+
   return publicData.publicUrl;
 };
 
@@ -83,6 +86,7 @@ const SaveRawImageToSupabase = async () => {
         </div>
       </div>
     <CustomLoading loading={loading}/>
+    <AiOutputDialog openDialog={openOutputDialog} closeDialog={()=>setOpenOutputDialog(false)} orgImage={orgImage} aiImage={aiOutputImage} />
     </div>
   )
 }
